@@ -2,5 +2,4 @@ Flask
 scikit-learn
 joblib
 gunicorn
-secure_filename
 PIL

@@ -2,3 +2,4 @@ Flask
 scikit-learn
 joblib
 gunicorn
+Pillow==10.0.0

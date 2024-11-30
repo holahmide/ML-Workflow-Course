@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
-from PIL import Image
 import os
 from werkzeug.utils import secure_filename
 

@@ -9,7 +9,7 @@ import numpy as np
 
 
 # Loading the model
-MODEL_PATH = os.path.join(os.getcwd(), 'backend/traffic_light_model.h5')
+MODEL_PATH = os.path.join(os.getcwd(), 'traffic_light_model.h5')
 model = load_model(MODEL_PATH)
 
 # Initialize Flask app

@@ -1,14 +1,28 @@
 from flask import Flask, request, jsonify
-import joblib
 import numpy as np
+from PIL import Image
 import os
 from werkzeug.utils import secure_filename
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import numpy as np
 
-# Load the model
-# model = joblib.load('/Users/olamideadeniyi/Documents/Masters/TME6015/Project/Code/backend/model.pkl')
+
+# Loading the model
+MODEL_PATH = os.path.join(os.getcwd(), 'backend/traffic_light_model.h5')
+model = load_model(MODEL_PATH)
 
 # Initialize Flask app
 app = Flask(__name__)
+
+
+
+def predict_image(image_path):
+    img = load_img(image_path, target_size=(224, 224))
+    img_array = img_to_array(img) / 255.0 
+    img_array = np.expand_dims(img_array, axis=0)
+    prediction = model.predict(img_array)
+    return "Traffic Light" if prediction[0][0] < 0.5 else "No Traffic Light"
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -33,20 +47,7 @@ def predict():
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             # Open the image
             with Image.open(file_path) as img:
-                # Preprocess the image
-                img = img.resize((224, 224))  # Resize to the input size expected by your model
-                img_array = np.array(img)    # Convert to NumPy array
-
-                # Normalize pixel values (example: scale to 0-1 if needed by the model)
-                img_array = img_array / 255.0
-
-                # Add batch dimension (1, height, width, channels)
-                img_array = np.expand_dims(img_array, axis=0)
-
-                # Perform prediction
-                # predictions = model.predict(img_array).tolist()
-                predictions = img_array.tolist()
-
+                predictions = predict_image(file_path)
         else:
             return jsonify({'error': 'Unsupported file format. Please upload a PNG, JPG, or JPEG image.'}), 400
 

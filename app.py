@@ -15,8 +15,6 @@ model = load_model(MODEL_PATH)
 # Initialize Flask app
 app = Flask(__name__)
 
-
-
 def predict_image(image_path):
     img = load_img(image_path, target_size=(224, 224))
     img_array = img_to_array(img) / 255.0 
